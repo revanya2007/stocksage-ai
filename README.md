@@ -283,7 +283,7 @@ Coverage includes stock-out detection, overstock logic, slow/non-moving detectio
 ## Demo Video
 
 Demo link:
-https://drive.google.com/drive/folders/184fjr_KDGUusb3zwSVDkKom8bp5h5Gry?usp=sharing
+https://youtu.be/CHTUnU3EZD0
 
 ## REPOSITORY STRUCTURE
 
