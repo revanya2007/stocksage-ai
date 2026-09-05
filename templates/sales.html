@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block title %}Sales Intelligence — StockSage AI{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Sales Intelligence</h1>
+  <p class="page-subtitle">Understand performance, trends and unusual sales changes.</p>
+</div>
+
+<!-- KPI METRICS -->
+<div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr);">
+  <div class="kpi-card accent-blue">
+    <div class="kpi-top">
+      <span class="kpi-label">Today's Sales</span>
+      <div class="kpi-icon">🛍️</div>
+    </div>
+    <div class="kpi-value">₹48,250</div>
+    <div class="kpi-footer"><span class="trend-up">↑ +12% vs yesterday</span></div>
+  </div>
+
+  <div class="kpi-card accent-violet">
+    <div class="kpi-top">
+      <span class="kpi-label">30-Day Sales</span>
+      <div class="kpi-icon">📈</div>
+    </div>
+    <div class="kpi-value">₹6,42,350</div>
+    <div class="kpi-footer"><span class="trend-up">↑ +18% vs prev period</span></div>
+  </div>
+
+  <div class="kpi-card accent-green">
+    <div class="kpi-top">
+      <span class="kpi-label">Units Sold</span>
+      <div class="kpi-icon">📦</div>
+    </div>
+    <div class="kpi-value">1,248</div>
+    <div class="kpi-footer"><span class="trend-up">↑ +16% volume</span></div>
+  </div>
+
+  <div class="kpi-card accent-blue">
+    <div class="kpi-top">
+      <span class="kpi-label">Overall Growth</span>
+      <div class="kpi-icon">🚀</div>
+    </div>
+    <div class="kpi-value">+18%</div>
+    <div class="kpi-footer"><span class="trend-up">Positive momentum</span></div>
+  </div>
+</div>
+
+<!-- MAIN TREND & ANOMALIES -->
+<div class="grid-2-equal">
+  <!-- SALES SPIKES -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h3 class="card-title" style="font-size: 17px; color: var(--healthy);">🚀 Sales Spikes</h3>
+        <p style="font-size: 12px; color: var(--text-muted);">Products experiencing unusual positive demand</p>
+      </div>
+      <span class="badge badge-healthy">2 Anomalies</span>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div style="background: var(--bg-secondary); padding: 14px; border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <strong style="font-size: 15px;">Bread</strong>
+          <p style="font-size: 12px; color: var(--text-muted);">Bakery Category • 640 units sold</p>
+        </div>
+        <div style="text-align: right;">
+          <span class="badge badge-healthy" style="font-size: 14px; padding: 6px 12px;">+80%</span>
+          <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">vs last 7 days avg</p>
+        </div>
+      </div>
+
+      <div style="background: var(--bg-secondary); padding: 14px; border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <strong style="font-size: 15px;">Mango Juice</strong>
+          <p style="font-size: 12px; color: var(--text-muted);">Beverages Category • 812 units sold</p>
+        </div>
+        <div style="text-align: right;">
+          <span class="badge badge-healthy" style="font-size: 14px; padding: 6px 12px;">+113%</span>
+          <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">vs last 7 days avg</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SALES DROPS -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h3 class="card-title" style="font-size: 17px; color: var(--critical);">📉 Sales Drops</h3>
+        <p style="font-size: 12px; color: var(--text-muted);">Products experiencing sudden demand slowing</p>
+      </div>
+      <span class="badge badge-critical">2 Anomalies</span>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div style="background: var(--bg-secondary); padding: 14px; border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <strong style="font-size: 15px;">Herbal Soap</strong>
+          <p style="font-size: 12px; color: var(--text-muted);">Personal Care • 18 units sold</p>
+        </div>
+        <div style="text-align: right;">
+          <span class="badge badge-critical" style="font-size: 14px; padding: 6px 12px;">-42%</span>
+          <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">vs expected baseline</p>
+        </div>
+      </div>
+
+      <div style="background: var(--bg-secondary); padding: 14px; border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <strong style="font-size: 15px;">Orange Juice</strong>
+          <p style="font-size: 12px; color: var(--text-muted);">Beverages • 42 units sold</p>
+        </div>
+        <div style="text-align: right;">
+          <span class="badge badge-critical" style="font-size: 14px; padding: 6px 12px;">-35%</span>
+          <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">vs expected baseline</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2-equal" style="margin-top: 20px;">
+  <!-- OPPORTUNITIES -->
+  <div class="card" style="grid-column: 1 / -1;">
+    <div class="card-header">
+      <div>
+        <h3 class="card-title" style="font-size: 17px; color: var(--healthy);">🌟 Growth & Opportunity Signals</h3>
+        <p style="font-size: 12px; color: var(--text-muted);">Products with positive momentum or cross-sell potential</p>
+      </div>
+    </div>
+    <div class="table-container">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Store</th>
+            <th>Opportunity</th>
+            <th>Evidence</th>
+            <th>Score</th>
+            <th>Suggested Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for opp in opportunities %}
+          <tr>
+            <td><strong>{{ opp.product_name }}</strong></td>
+            <td>{{ opp.store_name }}</td>
+            <td><span class="badge badge-healthy">{{ opp.opportunity_label }}</span></td>
+            <td style="font-size: 12px; color: var(--text-muted);">{{ opp.business_context }}</td>
+            <td><div class="priority-cell"><span class="priority-number" style="color: var(--healthy);">{{ opp.score | int }}</span></div></td>
+            <td style="font-size: 12px;">{{ opp.suggested_action }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="6">No opportunities detected.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2-equal" style="margin-top: 20px;">
+  <!-- BASKETS -->
+  <div class="card" style="grid-column: 1 / -1;">
+    <div class="card-header">
+      <div>
+        <h3 class="card-title" style="font-size: 17px; color: var(--primary);">🛒 Frequently Bought Together</h3>
+        <p style="font-size: 12px; color: var(--text-muted);">Top co-purchased items (Basket Intelligence)</p>
+      </div>
+    </div>
+    <div class="table-container">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Product A</th>
+            <th>Product B</th>
+            <th>Transactions Together</th>
+            <th>Support</th>
+            <th>Confidence (A → B)</th>
+            <th>Lift</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in baskets %}
+          <tr>
+            <td><strong>{{ b.product_a_name }}</strong></td>
+            <td><strong>{{ b.product_b_name }}</strong></td>
+            <td>{{ b.pair_transaction_count }}</td>
+            <td>{{ (b.support * 100) | round(1) }}%</td>
+            <td>{{ (b.confidence_a_to_b * 100) | round(1) }}%</td>
+            <td>{{ b.lift | round(2) }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="6">No frequent baskets found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

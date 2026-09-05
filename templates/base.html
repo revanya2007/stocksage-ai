@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}StockSage AI — Retail Decision Copilot{% endblock %}</title>
+  <meta name="description" content="StockSage AI - Know What Sells. Predict What's Next. Retail Sales & Inventory Copilot.">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="app-container">
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="/" class="brand">
+          <div class="brand-icon">📈</div>
+          <div>
+            <div class="brand-title">StockSage AI</div>
+            <div class="brand-tagline">Know What Sells.<br>Predict What's Next.</div>
+          </div>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="/" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="/copilot" class="nav-item {% if active_page == 'copilot' %}active{% endif %}">
+          <span class="nav-icon">⚡</span>
+          <span>AI Copilot</span>
+        </a>
+        <a href="/inventory" class="nav-item {% if active_page == 'inventory' %}active{% endif %}">
+          <span class="nav-icon">📦</span>
+          <span>Inventory</span>
+        </a>
+        <a href="/sales" class="nav-item {% if active_page == 'sales' %}active{% endif %}">
+          <span class="nav-icon">📈</span>
+          <span>Sales</span>
+        </a>
+        <a href="/simulator" class="nav-item {% if active_page == 'simulator' %}active{% endif %}">
+          <span class="nav-icon">🧪</span>
+          <span>Simulator</span>
+        </a>
+        <a href="/history" class="nav-item {% if active_page == 'history' %}active{% endif %}">
+          <span class="nav-icon">🕒</span>
+          <span>History</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom-card">
+        <div class="bottom-card-title">Smarter Inventory.<br>Stronger Business.</div>
+        <div class="bottom-card-graphic">
+          <div class="bg-bar" style="height: 40%;"></div>
+          <div class="bg-bar" style="height: 65%;"></div>
+          <div class="bg-bar highlight" style="height: 90%;"></div>
+          <div class="bg-bar" style="height: 55%;"></div>
+          <div class="bg-bar highlight" style="height: 100%;"></div>
+        </div>
+        <div class="sidebar-version">
+          <span>StockSage AI</span>
+          <span>v1.0</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOP BAR -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Navigation">☰</button>
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" placeholder="Ask StockSage... e.g. What should I focus on today?">
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="date-display">
+            <span>📅</span>
+            <span id="current-date">Sep 04, 2026</span>
+          </div>
+
+          <button class="notification-btn" title="Notifications">
+            🔔
+            <span class="notification-dot"></span>
+          </button>
+
+          <div class="user-profile">
+            <div class="avatar">M</div>
+            <div class="user-info">
+              <span class="user-name">Store Manager</span>
+              <span class="user-role">Retail Branch #104</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- PAGE CONTENT -->
+      <main class="content-body">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+
+  <!-- EVIDENCE INSPECTOR SLIDE-OVER MODAL -->
+  <div class="modal-overlay" id="evidence-modal">
+    <div class="slide-over-panel" style="width: 520px; max-width: 90vw;">
+      <div class="slide-over-header">
+        <div>
+          <div class="slide-over-title">Why this recommendation?</div>
+          <span class="badge badge-ai" style="margin-top: 4px;">Evidence Inspector</span>
+        </div>
+        <button class="close-btn" id="close-evidence">&times;</button>
+      </div>
+
+      <div class="slide-over-body" style="gap: 16px; overflow-y: auto;">
+        <!-- ITEM HEADER -->
+        <div class="evidence-box">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+            <div>
+              <h4 id="modal-product-name" style="font-size: 17px; font-weight: 700; margin-bottom: 2px;">Product Name</h4>
+              <p id="modal-store-category" style="color: var(--text-muted); font-size: 12px;">Store • Category</p>
+            </div>
+            <span class="badge badge-critical" id="modal-issue-badge">Issue</span>
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px;">
+            <span style="font-size: 13px; color: var(--text-secondary);">Priority Score:</span>
+            <div style="text-align: right;">
+              <strong id="modal-priority-score" style="font-size: 16px; color: var(--critical);">88 / 100</strong>
+              <div id="modal-priority-label" style="font-size: 11px; color: var(--text-muted);">Critical Priority</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADVISORY RECOMMENDATION -->
+        <div class="evidence-box" style="border-left: 3px solid var(--accent-blue);">
+          <h5 style="font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent-blue); margin-bottom: 6px;">
+            💡 Advisory Recommendation
+          </h5>
+          <p id="modal-recommendation-text" style="font-size: 13px; line-height: 1.5; color: var(--text-primary);">
+            Recommendation text...
+          </p>
+        </div>
+
+        <!-- KEY METRICS -->
+        <div class="evidence-box">
+          <h5 style="font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">Key Operational Metrics</h5>
+          <div id="modal-metrics-container" style="display: flex; flex-direction: column; gap: 6px;">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- FORMULA & CALCULATION -->
+        <div class="evidence-box" id="modal-formula-box-wrapper">
+          <h5 id="modal-formula-label" style="font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px;">Calculation Formula</h5>
+          <div class="evidence-formula" id="modal-formula-text">Formula string...</div>
+        </div>
+
+        <!-- FINANCIAL IMPACT -->
+        <div class="evidence-box">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span id="modal-impact-label" style="font-size: 13px; font-weight: 600; color: var(--text-secondary);">Business Impact:</span>
+            <strong id="modal-impact-value" style="font-size: 15px; color: var(--high-risk);">₹0.00</strong>
+          </div>
+        </div>
+
+        <!-- PRIORITY SCORE BREAKDOWN -->
+        <div class="evidence-box" id="modal-breakdown-box">
+          <h5 style="font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">Priority Score Breakdown</h5>
+          <div id="modal-priority-breakdown" style="font-size: 12px; display: flex; flex-direction: column; gap: 4px;">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- ASSUMPTIONS -->
+        <div class="evidence-box">
+          <h5 style="font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px;">Calculation Assumptions</h5>
+          <ul id="modal-assumptions-list" style="font-size: 12px; color: var(--text-muted); padding-left: 18px; margin: 0; display: flex; flex-direction: column; gap: 4px;">
+            <!-- Rendered by JS -->
+          </ul>
+        </div>
+
+        <!-- CONFIDENCE & SECONDARY SIGNALS -->
+        <div class="evidence-box">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span style="font-size: 13px; font-weight: 600; color: var(--text-secondary);">Data Confidence:</span>
+            <span class="badge badge-healthy" id="modal-confidence-badge">High</span>
+          </div>
+          <div id="modal-secondary-signals-container" style="margin-top: 8px; display: none;">
+            <span style="font-size: 12px; font-weight: 600; color: var(--warning);">Secondary Signals:</span>
+            <div id="modal-secondary-signals-list" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;"></div>
+          </div>
+        </div>
+
+        <div style="margin-top: 8px; padding-top: 8px;">
+          <button class="btn btn-primary" style="width: 100%;" onclick="document.getElementById('evidence-modal').classList.remove('active')">
+            Acknowledge & Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

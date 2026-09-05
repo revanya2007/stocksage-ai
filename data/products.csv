@@ -1,0 +1,61 @@
+product_id,product_name,category,selling_price
+1,Milk 1L,Dairy,64.0
+2,Curd 500g,Dairy,35.0
+3,Butter 200g,Dairy,115.0
+4,Cheese Slices 200g,Dairy,140.0
+5,Paneer 200g,Dairy,95.0
+6,Flavored Milk 200ml,Dairy,30.0
+7,Condensed Milk 400g,Dairy,130.0
+8,Eggs (12 pack),Bakery,84.0
+9,Bread White 400g,Bakery,40.0
+10,Bread Wheat 400g,Bakery,45.0
+11,Burger Buns (4 pack),Bakery,35.0
+12,Fruit Cake 250g,Bakery,90.0
+13,Garlic Bread 200g,Bakery,60.0
+14,Croissant (2 pack),Bakery,80.0
+15,Mango Juice 1L,Beverages,110.0
+16,Orange Juice 1L,Beverages,120.0
+17,Coca-Cola 750ml,Beverages,45.0
+18,Mineral Water 1L,Beverages,20.0
+19,Energy Drink 250ml,Beverages,110.0
+20,Green Tea 100g,Beverages,220.0
+21,Instant Coffee 100g,Beverages,310.0
+22,Potato Chips 100g,Snacks,30.0
+23,Cream Biscuits 120g,Snacks,25.0
+24,Salted Peanuts 150g,Snacks,50.0
+25,Roasted Almonds 200g,Snacks,280.0
+26,Premium Chocolate Box,Snacks,450.0
+27,Popcorn Pack 100g,Snacks,40.0
+28,Wafer Roll 150g,Snacks,75.0
+29,Toothpaste 150g,Personal Care,95.0
+30,Toothbrush Soft,Personal Care,40.0
+31,Shampoo 180ml,Personal Care,175.0
+32,Soap Bar Pack (3x100g),Personal Care,120.0
+33,Hand Wash 250ml,Personal Care,85.0
+34,Herbal Hair Oil 200ml,Personal Care,190.0
+35,Face Wash 100ml,Personal Care,145.0
+36,Dishwash Liquid 500ml,Household,105.0
+37,Detergent Powder 1kg,Household,160.0
+38,Specialty Cleaner 500ml,Household,210.0
+39,Floor Cleaner 1L,Household,140.0
+40,Tissue Paper Box,Household,65.0
+41,Garbage Bags 30s,Household,90.0
+42,Basmati Rice 5kg,Grocery,620.0
+43,Wheat Flour 5kg,Grocery,240.0
+44,Olive Oil 500ml,Grocery,580.0
+45,Refined Oil 1L,Grocery,135.0
+46,Sugar 1kg,Grocery,48.0
+47,Toor Dal 1kg,Grocery,165.0
+48,Salt 1kg,Grocery,24.0
+49,Spices Mix Pack,Grocery,85.0
+50,Tea Powder 500g,Grocery,260.0
+51,Apples 1kg,Fresh Produce,180.0
+52,Bananas 1kg,Fresh Produce,50.0
+53,Tomatoes 1kg,Fresh Produce,40.0
+54,Onions 1kg,Fresh Produce,35.0
+55,Potatoes 1kg,Fresh Produce,30.0
+56,Oranges 1kg,Fresh Produce,120.0
+57,Grapes 500g,Fresh Produce,90.0
+58,Spinach Pack 250g,Fresh Produce,25.0
+59,Carrots 500g,Fresh Produce,35.0
+60,Cucumber 1kg,Fresh Produce,40.0

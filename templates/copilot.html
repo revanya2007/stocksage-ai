@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}AI Copilot — StockSage AI{% endblock %}
+
+{% block content %}
+<div class="copilot-container">
+  <!-- HEADER & BADGE -->
+  <div class="copilot-header-bar">
+    <div>
+      <h1 class="page-title">StockSage AI Copilot</h1>
+      <p class="page-subtitle">Ask questions about your sales, stock levels, risks, and business impact.</p>
+    </div>
+    <span class="badge badge-ai" style="font-size: 13px; padding: 6px 14px;">⚡ Evidence-Backed AI</span>
+  </div>
+
+  <!-- PROMPT SUGGESTION CHIPS -->
+  <div class="prompt-chips">
+    <div class="chip">What should I focus on today?</div>
+    <div class="chip">Which products are running out?</div>
+    <div class="chip">Show overstocked products</div>
+    <div class="chip">Which products had a sales spike?</div>
+    <div class="chip">How is Milk 1L performing?</div>
+    <div class="chip">What profit did we make?</div>
+  </div>
+
+  <!-- CHAT HISTORY AREA -->
+  <div class="chat-history" id="chat-history">
+    <!-- WELCOME MESSAGE -->
+    <div class="chat-message ai">
+      <div class="chat-avatar ai-av">⚡</div>
+      <div class="chat-bubble" style="max-width: 580px;">
+        <p><strong>Hello! I am your StockSage Retail Copilot.</strong></p>
+        <p style="font-size: 13px; margin-top: 4px; color: var(--text-secondary);">
+          You can ask me natural-language questions about high-priority issues, stock-out risks, overstock items, sales anomalies, product status, or business impact. All answers are grounded in machine-checked local store analytics.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAT INPUT AREA -->
+  <div class="chat-input-area">
+    <input type="text" class="chat-input" id="copilot-input" placeholder="Ask StockSage... e.g., Which products are running out?">
+    <button class="btn btn-primary" id="send-copilot-btn">Send ⚡</button>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — StockSage AI{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Good Morning, Manager! 👋</h1>
+  <p class="page-subtitle">Here's what needs your attention today.</p>
+</div>
+
+<!-- KPI CARDS SECTION -->
+<div class="kpi-grid">
+  <div class="kpi-card accent-blue">
+    <div class="kpi-top">
+      <span class="kpi-label">Latest Day Sales</span>
+      <div class="kpi-icon">🛍️</div>
+    </div>
+    <div class="kpi-value">₹{{ "{:,.0f}".format(d.latest_sales) }}</div>
+    <div class="kpi-footer">
+      <span class="kpi-caption">Dataset Day: {{ d.max_date or 'Latest' }}</span>
+    </div>
+  </div>
+
+  <div class="kpi-card accent-red">
+    <div class="kpi-top">
+      <span class="kpi-label">Products at Risk</span>
+      <div class="kpi-icon">⚠️</div>
+    </div>
+    <div class="kpi-value">{{ d.products_at_risk }}</div>
+    <div class="kpi-footer">
+      <span class="trend-down">Stock-out Risk Items</span>
+    </div>
+  </div>
+
+  <div class="kpi-card accent-orange">
+    <div class="kpi-top">
+      <span class="kpi-label">Slow / Non-Moving</span>
+      <div class="kpi-icon">📦</div>
+    </div>
+    <div class="kpi-value">{{ d.slow_non_moving }}</div>
+    <div class="kpi-footer">
+      <span class="kpi-caption">Retail Value of Slow / Non-Moving Stock</span>
+    </div>
+  </div>
+
+  <div class="kpi-card accent-green">
+    <div class="kpi-top">
+      <span class="kpi-label">Sales Anomalies</span>
+      <div class="kpi-icon">🚀</div>
+    </div>
+    <div class="kpi-value">{{ d.sales_anomalies }}</div>
+    <div class="kpi-footer">
+      <span class="trend-up">Spikes & Drops</span>
+    </div>
+  </div>
+
+  <div class="kpi-card accent-violet">
+    <div class="kpi-top">
+      <span class="kpi-label">Estimated Revenue at Risk</span>
+      <div class="kpi-icon">💰</div>
+    </div>
+    <div class="kpi-value">₹{{ "{:,.0f}".format(d.revenue_at_risk) }}</div>
+    <div class="kpi-footer">
+      <span class="kpi-caption">Across {{ d.products_at_risk }} stock-out SKUs</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN GRID: WHAT NEEDS ATTENTION & SALES TREND -->
+<div class="grid-2">
+  <!-- WHAT NEEDS ATTENTION TODAY -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">What Needs Attention Today?</h2>
+        <p style="font-size: 12px; color: var(--text-muted);">High-priority retail operational issues detected by Phase 6C decision engine</p>
+      </div>
+      <a href="/inventory" class="btn-link">View All →</a>
+    </div>
+
+    <div class="table-container">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Product & Store</th>
+            <th>Issue</th>
+            <th>Impact / Evidence</th>
+            <th>Priority</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if d.top_recommendations %}
+            {% for rec in d.top_recommendations %}
+            <tr>
+              <td>
+                <div class="product-info">
+                  <span class="product-name">{{ rec.product_name }}</span>
+                  <span class="product-cat">{{ rec.store_name }} • {{ rec.category }}</span>
+                </div>
+              </td>
+              <td>
+                {% if rec.issue_type == 'stockout_risk' %}
+                  <span class="badge badge-critical">{{ rec.issue_label }}</span>
+                {% elif rec.issue_type == 'overstock' %}
+                  <span class="badge badge-high">{{ rec.issue_label }}</span>
+                {% else %}
+                  <span class="badge badge-warning">{{ rec.issue_label }}</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if rec.impact and rec.impact.value is not none and rec.impact.value > 0 %}
+                  <div style="font-weight: 500; font-size: 13px;">₹{{ "{:,.0f}".format(rec.impact.value) }}</div>
+                  <div style="font-size: 11px; color: var(--text-muted);">{{ rec.impact.label }}</div>
+                {% else %}
+                  <div style="font-weight: 500; font-size: 13px;">Operational Insight</div>
+                  <div style="font-size: 11px; color: var(--text-muted);">{{ rec.issue_label }}</div>
+                {% endif %}
+              </td>
+              <td>
+                <div class="priority-cell">
+                  <span class="priority-number" style="color: {% if rec.priority_score >= 85 %}var(--critical){% elif rec.priority_score >= 60 %}var(--high-risk){% else %}var(--warning){% endif %};">
+                    {{ rec.priority_score }}
+                  </span>
+                  <div class="priority-bar-bg">
+                    <div class="priority-bar-fill {% if rec.priority_score >= 85 %}fill-critical{% elif rec.priority_score >= 60 %}fill-high{% else %}fill-warning{% endif %}"
+                         style="width: {{ rec.priority_score }}%;"></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <button class="btn btn-secondary btn-sm btn-evidence"
+                        data-evidence="{{ rec | tojson }}">
+                  View Evidence
+                </button>
+              </td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 24px;">
+                No high-priority issues are currently detected in the available data.
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SALES TREND CARD -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">Sales Trend</h2>
+        <p style="font-size: 12px; color: var(--text-muted);">Overall store revenue trajectory across dataset</p>
+      </div>
+      <span class="badge badge-info">Last 30 Days</span>
+    </div>
+
+    <!-- SVG LINE CHART -->
+    <div class="chart-box">
+      <svg width="100%" height="100%" viewBox="0 0 400 180" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="chartGlow" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#2F8CFF" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#2F8CFF" stop-opacity="0.0"/>
+          </linearGradient>
+        </defs>
+        <!-- Background Grid Lines -->
+        <line x1="0" y1="40" x2="400" y2="40" stroke="#22324A" stroke-dasharray="4 4" />
+        <line x1="0" y1="90" x2="400" y2="90" stroke="#22324A" stroke-dasharray="4 4" />
+        <line x1="0" y1="140" x2="400" y2="140" stroke="#22324A" stroke-dasharray="4 4" />
+
+        <!-- Area Gradient Fill -->
+        <path d="M0,130 Q50,110 100,120 T200,70 T300,90 T400,30 L400,180 L0,180 Z" fill="url(#chartGlow)" />
+
+        <!-- Main Trend Curve -->
+        <path d="M0,130 Q50,110 100,120 T200,70 T300,90 T400,30" fill="none" stroke="#2F8CFF" stroke-width="3" />
+
+        <!-- Highlight Data Points -->
+        <circle cx="200" cy="70" r="5" fill="#2F8CFF" stroke="#FFFFFF" stroke-width="2" />
+        <circle cx="400" cy="30" r="5" fill="#8B5CF6" stroke="#FFFFFF" stroke-width="2" />
+      </svg>
+    </div>
+
+    <!-- REAL STAT CARDS BELOW CHART -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px;">
+      <div style="background: var(--bg-secondary); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
+        <div style="font-size: 18px; font-weight: 700; color: var(--text-primary);">₹{{ "{:,.0f}".format(d.total_sales_30d) }}</div>
+        <div style="font-size: 11.5px; color: var(--text-muted);">Total Sales (30 Days)</div>
+      </div>
+      <div style="background: var(--bg-secondary); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
+        <div style="font-size: 18px; font-weight: 700; color: var(--text-primary);">{{ "{:,}".format(d.total_units_30d) }}</div>
+        <div style="font-size: 11.5px; color: var(--text-muted);">Total Units Sold (30 Days)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM SECTION: TOP PRODUCTS, INVENTORY STATUS, QUICK ACTIONS -->
+<div class="grid-3">
+  <!-- TOP PERFORMING PRODUCTS -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title" style="font-size: 16px;">Top Products — 30-Day Revenue</h3>
+      <a href="/sales" class="btn-link">Sales →</a>
+    </div>
+
+    <div class="table-container">
+      <table class="custom-table" style="font-size: 13px;">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Units Sold</th>
+            <th>Revenue</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in d.top_products %}
+          <tr>
+            <td><strong>{{ p.product_name }}</strong></td>
+            <td>{{ "{:,}".format(p.total_units) }}</td>
+            <td><span class="badge badge-healthy">₹{{ "{:,.0f}".format(p.total_revenue) }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- INVENTORY STATUS CHART -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title" style="font-size: 16px;">Inventory Health Status</h3>
+      <span class="badge badge-info">{{ d.inventory_status.total }} SKUs</span>
+    </div>
+
+    <div class="donut-chart-container">
+      <div class="donut-visual">
+        <div class="donut-center-text">
+          <div class="donut-number">{{ d.inventory_status.total }}</div>
+          <div class="donut-label">SKU Instances</div>
+        </div>
+      </div>
+
+      <div class="donut-legend">
+        <div class="legend-item">
+          <div class="legend-left">
+            <div class="legend-color" style="background-color: var(--critical);"></div>
+            <span>At Risk</span>
+          </div>
+          <strong>{{ d.inventory_status.at_risk }}</strong>
+        </div>
+        <div class="legend-item">
+          <div class="legend-left">
+            <div class="legend-color" style="background-color: var(--high-risk);"></div>
+            <span>Overstock</span>
+          </div>
+          <strong>{{ d.inventory_status.overstock }}</strong>
+        </div>
+        <div class="legend-item">
+          <div class="legend-left">
+            <div class="legend-color" style="background-color: var(--warning);"></div>
+            <span>Slow Moving</span>
+          </div>
+          <strong>{{ d.inventory_status.slow_moving }}</strong>
+        </div>
+        <div class="legend-item">
+          <div class="legend-left">
+            <div class="legend-color" style="background-color: var(--text-muted);"></div>
+            <span>Non-Moving</span>
+          </div>
+          <strong>{{ d.inventory_status.non_moving }}</strong>
+        </div>
+        <div class="legend-item">
+          <div class="legend-left">
+            <div class="legend-color" style="background-color: var(--healthy);"></div>
+            <span>Healthy</span>
+          </div>
+          <strong>{{ d.inventory_status.healthy }}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title" style="font-size: 16px;">Quick Actions</h3>
+    </div>
+
+    <div class="quick-actions-grid">
+      <a href="/copilot" class="action-card">
+        <div class="action-card-title">⚡ Ask Copilot</div>
+        <div class="action-card-desc">Get instant AI-backed retail insights</div>
+      </a>
+      <a href="/simulator" class="action-card">
+        <div class="action-card-title">🧪 Try What-If</div>
+        <div class="action-card-desc">Simulate demand changes & risk shift</div>
+      </a>
+      <a href="/inventory" class="action-card">
+        <div class="action-card-title">📦 View Inventory</div>
+        <div class="action-card-desc">Check stock levels & health metrics</div>
+      </a>
+      <a href="/sales" class="action-card">
+        <div class="action-card-title">📈 Analyze Sales</div>
+        <div class="action-card-desc">Explore sales spikes & drop anomalies</div>
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

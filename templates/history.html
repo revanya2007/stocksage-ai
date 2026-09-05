@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Decision History — StockSage AI{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Decision History</h1>
+  <p class="page-subtitle">Review StockSage recommendations and manager actions.</p>
+</div>
+
+<!-- TOP SUMMARY CARDS -->
+<div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr);">
+  <div class="kpi-card accent-blue">
+    <div class="kpi-top">
+      <span class="kpi-label">Total Recommendations</span>
+      <div class="kpi-icon">📋</div>
+    </div>
+    <div class="kpi-value">24</div>
+    <div class="kpi-footer"><span class="kpi-caption">Generated to date</span></div>
+  </div>
+
+  <div class="kpi-card accent-green">
+    <div class="kpi-top">
+      <span class="kpi-label">Accepted</span>
+      <div class="kpi-icon">✅</div>
+    </div>
+    <div class="kpi-value">14</div>
+    <div class="kpi-footer"><span class="trend-up">58% Acceptance Rate</span></div>
+  </div>
+
+  <div class="kpi-card accent-orange">
+    <div class="kpi-top">
+      <span class="kpi-label">Under Review</span>
+      <div class="kpi-icon">🔍</div>
+    </div>
+    <div class="kpi-value">6</div>
+    <div class="kpi-footer"><span class="trend-neutral">Pending manager decision</span></div>
+  </div>
+
+  <div class="kpi-card accent-red">
+    <div class="kpi-top">
+      <span class="kpi-label">Dismissed</span>
+      <div class="kpi-icon">❌</div>
+    </div>
+    <div class="kpi-value">4</div>
+    <div class="kpi-footer"><span class="kpi-caption">Declined actions</span></div>
+  </div>
+</div>
+
+<!-- HISTORY TABLE -->
+<div class="card">
+  <div class="table-container">
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Product</th>
+          <th>Issue</th>
+          <th>Priority</th>
+          <th>Recommendation</th>
+          <th>Manager Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for rec in recs %}
+        <tr>
+          <td style="color: var(--text-muted); font-size: 13px;">{{ rec.timestamp[:10] }}</td>
+          <td><strong>Product {{ rec.product_id }}</strong><br><small>Store {{ rec.store_id }}</small></td>
+          <td>
+            <span class="badge {% if rec.issue_type == 'stockout_risk' %}badge-critical{% elif rec.issue_type == 'overstock' %}badge-high{% else %}badge-warning{% endif %}">
+              {{ rec.issue_type | replace('_', ' ') | title }}
+            </span>
+          </td>
+          <td>
+            <div class="priority-cell">
+              <span class="priority-number" style="color: {% if rec.priority_score >= 80 %}var(--critical){% elif rec.priority_score >= 60 %}var(--high-risk){% else %}var(--warning){% endif %};">{{ rec.priority_score | int }}</span>
+            </div>
+          </td>
+          <td style="font-size: 13px;">{{ rec.recommendation }}</td>
+          <td>
+             <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                 <span id="badge-{{ rec.recommendation_id }}" class="badge {% if rec.manager_action == 'Accept' %}badge-healthy{% elif rec.manager_action == 'Dismiss' %}badge-critical{% else %}badge-warning{% endif %}" style="margin-bottom: 5px;">{{ rec.manager_action }}</span>
+                 <br>
+                 <button class="btn btn-secondary" style="padding: 2px 5px; font-size: 11px;" onclick="updateAction({{ rec.recommendation_id }}, 'Accept')">Accept</button>
+                 <button class="btn btn-secondary" style="padding: 2px 5px; font-size: 11px;" onclick="updateAction({{ rec.recommendation_id }}, 'Dismiss')">Dismiss</button>
+                 <button class="btn btn-secondary" style="padding: 2px 5px; font-size: 11px;" onclick="updateAction({{ rec.recommendation_id }}, 'Review')">Review</button>
+             </div>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6">No recommendations found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+async function updateAction(recId, action) {
+    try {
+        const response = await fetch(`/api/recommendations/${recId}/action`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: action })
+        });
+        const data = await response.json();
+        if (data.success) {
+            let badge = document.getElementById(`badge-${recId}`);
+            if (badge) {
+                badge.innerText = action;
+                badge.className = 'badge ' + (action === 'Accept' ? 'badge-healthy' : (action === 'Dismiss' ? 'badge-critical' : 'badge-warning'));
+            }
+        } else {
+            alert('Error updating action: ' + data.message);
+        }
+    } catch (e) {
+        alert('Network error.');
+    }
+}
+</script>
+{% endblock %}

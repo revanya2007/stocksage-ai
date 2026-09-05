@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Inventory Intelligence — StockSage AI{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Inventory Intelligence</h1>
+  <p class="page-subtitle">Monitor real stock health, risks, and movement across stores.</p>
+</div>
+
+<!-- KPI METRICS -->
+<div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr);">
+  <div class="kpi-card accent-blue">
+    <div class="kpi-top">
+      <span class="kpi-label">Total SKUs</span>
+      <div class="kpi-icon">📦</div>
+    </div>
+    <div class="kpi-value">{{ kpis.total_skus }}</div>
+    <div class="kpi-footer"><span class="kpi-caption">Active Store-SKU Items</span></div>
+  </div>
+
+  <div class="kpi-card accent-red">
+    <div class="kpi-top">
+      <span class="kpi-label">At Risk</span>
+      <div class="kpi-icon">⚠️</div>
+    </div>
+    <div class="kpi-value">{{ kpis.at_risk }}</div>
+    <div class="kpi-footer"><span class="trend-down">Stock-out Risk</span></div>
+  </div>
+
+  <div class="kpi-card accent-orange">
+    <div class="kpi-top">
+      <span class="kpi-label">Overstocked</span>
+      <div class="kpi-icon">📈</div>
+    </div>
+    <div class="kpi-value">{{ kpis.overstock }}</div>
+    <div class="kpi-footer"><span class="trend-neutral">Capital Locked</span></div>
+  </div>
+
+  <div class="kpi-card accent-violet">
+    <div class="kpi-top">
+      <span class="kpi-label">Slow / Non-Moving</span>
+      <div class="kpi-icon">⏳</div>
+    </div>
+    <div class="kpi-value">{{ kpis.slow_moving }}</div>
+    <div class="kpi-footer"><span class="trend-neutral">Low Sales Velocity</span></div>
+  </div>
+</div>
+
+<!-- FILTERS & SEARCH -->
+<div class="card" style="margin-bottom: 24px;">
+  <div class="filter-bar" style="margin-bottom: 0;">
+    <select class="filter-select" id="filter-store">
+      <option value="">Store: All Stores</option>
+      <option value="Central Market">Central Market</option>
+      <option value="City Square Mart">City Square Mart</option>
+      <option value="Riverside Store">Riverside Store</option>
+    </select>
+    <select class="filter-select" id="filter-category">
+      <option value="">Category: All Categories</option>
+      <option value="Dairy">Dairy</option>
+      <option value="Grocery">Grocery</option>
+      <option value="Personal Care">Personal Care</option>
+      <option value="Bakery">Bakery</option>
+      <option value="Snacks">Snacks</option>
+      <option value="Beverages">Beverages</option>
+      <option value="Pantry">Pantry</option>
+    </select>
+    <input type="text" class="search-input" id="table-search-input" placeholder="Search products..." style="flex: 1; max-width: 300px;">
+  </div>
+</div>
+
+<!-- INVENTORY TABLE -->
+<div class="card">
+  <div class="table-container">
+    <table class="custom-table filterable-table">
+      <thead>
+        <tr>
+          <th>Product & Store</th>
+          <th>Category</th>
+          <th>Current Stock</th>
+          <th>Days Remaining</th>
+          <th>Status</th>
+          <th>Priority</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+        <tr>
+          <td>
+            <div class="product-info">
+              <span class="product-name">{{ item.product_name }}</span>
+              <span class="product-cat">{{ item.store_name }}</span>
+            </div>
+          </td>
+          <td>{{ item.category }}</td>
+          <td>
+            {% if item.current_stock == 0 %}
+              <span style="color: var(--critical); font-weight: 600;">0 units (Out of Stock)</span>
+            {% else %}
+              {{ item.current_stock }} units
+            {% endif %}
+          </td>
+          <td>
+            {% if item.current_stock == 0 %}
+              <span style="color: var(--critical); font-weight: 600;">0 days (Out of Stock)</span>
+            {% elif item.ads == 0 %}
+              <span style="color: var(--text-muted); font-size: 12px;">Not calculable — no recent sales</span>
+            {% elif item.days_remaining_val and item.days_remaining_val < 3 %}
+              <span style="color: var(--critical); font-weight: 600;">{{ item.days_remaining_display }}</span>
+            {% elif item.days_remaining_val and item.days_remaining_val < 7 %}
+              <span style="color: var(--warning); font-weight: 600;">{{ item.days_remaining_display }}</span>
+            {% else %}
+              <span style="color: var(--text-primary);">{{ item.days_remaining_display }}</span>
+            {% endif %}
+          </td>
+          <td><span class="badge {{ item.badge_class }}">{{ item.status_label }}</span></td>
+          <td>
+            <div class="priority-cell">
+              <span class="priority-number" style="color: {% if item.priority_score >= 85 %}var(--critical){% elif item.priority_score >= 60 %}var(--high-risk){% elif item.priority_score >= 30 %}var(--warning){% else %}var(--healthy){% endif %};">
+                {{ item.priority_score }}
+              </span>
+              <div class="priority-bar-bg">
+                <div class="priority-bar-fill {% if item.priority_score >= 85 %}fill-critical{% elif item.priority_score >= 60 %}fill-high{% elif item.priority_score >= 30 %}fill-warning{% else %}fill-healthy{% endif %}"
+                     style="width: {{ item.priority_score }}%;"></div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-secondary btn-sm btn-evidence"
+                    data-evidence="{{ item.evidence_json | tojson }}">
+              View Evidence
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
